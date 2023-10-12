@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
+import cloudinary from "cloudinary"; // Import the Cloudinary SDK
 
 /* REGISTER USER */
 export const register = async (req, res) => {
@@ -10,7 +11,6 @@ export const register = async (req, res) => {
       lastName,
       email,
       password,
-      picturePath,
       friends,
       location,
       occupation,
@@ -19,24 +19,46 @@ export const register = async (req, res) => {
     const salt = await bcrypt.genSalt();
     const passwordHash = await bcrypt.hash(password, salt);
 
-    const newUser = new User({
-      firstName,
-      lastName,
-      email,
-      password: passwordHash,
-      picturePath,
-      friends,
-      location,
-      occupation,
-      viewedProfile: Math.floor(Math.random() * 10000),
-      impressions: Math.floor(Math.random() * 10000),
-    });
-    const savedUser = await newUser.save();
-    res.status(201).json(savedUser);
+    // Check if there's an uploaded image in the request
+    if (req.file) {
+      // Upload the image to Cloudinary
+      const result = await cloudinary.v2.uploader.upload(req.file.path);
+      const picturePath = result.secure_url;
+      const newUser = new User({
+        firstName,
+        lastName,
+        email,
+        password: passwordHash,
+        picturePath, // Store the Cloudinary URL
+        friends,
+        location,
+        occupation,
+        viewedProfile: Math.floor(Math.random() * 10000),
+        impressions: Math.floor(Math.random() * 10000),
+      });
+      const savedUser = await newUser.save();
+      res.status(201).json(savedUser);
+    } else {
+      // If no image was uploaded, create the user without a picturePath
+      const newUser = new User({
+        firstName,
+        lastName,
+        email,
+        password: passwordHash,
+        friends,
+        location,
+        occupation,
+        viewedProfile: Math.floor(Math.random() * 10000),
+        impressions: Math.floor(Math.random() * 10000),
+      });
+      const savedUser = await newUser.save();
+      res.status(201).json(savedUser);
+    }
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
+
 
 /* LOGGING IN */
 export const login = async (req, res) => {
