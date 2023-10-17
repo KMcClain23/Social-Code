@@ -71,3 +71,22 @@ export const likePost = async (req, res) => {
     res.status(404).json({ message: err.message });
   }
 };
+
+export const editPost = async (req, res) => {
+  const { id } = req.params;
+  const { userId, description, picturePath } = req.body;
+
+  try {
+    const post = await Post.findById(id);
+
+    if (post.userId !== userId) {
+      return res.status(403).json({ message: "You can only update your own posts." });
+    }
+
+    const updatedPost = await Post.findByIdAndUpdate(id, { description, picturePath }, { new: true, runValidators: true, context: 'query' });
+
+    res.status(200).json(updatedPost);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};

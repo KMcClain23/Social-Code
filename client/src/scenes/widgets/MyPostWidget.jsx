@@ -1,22 +1,5 @@
-import {
-  EditOutlined,
-  DeleteOutlined,
-  AttachFileOutlined,
-  GifBoxOutlined,
-  ImageOutlined,
-  MicOutlined,
-  MoreHorizOutlined,
-} from "@mui/icons-material";
-import {
-  Box,
-  Divider,
-  Typography,
-  InputBase,
-  useTheme,
-  Button,
-  IconButton,
-  useMediaQuery,
-} from "@mui/material";
+import { EditOutlined, DeleteOutlined, AttachFileOutlined, GifBoxOutlined, ImageOutlined, MicOutlined, MoreHorizOutlined, } from "@mui/icons-material";
+import { Box, Divider, Typography, InputBase, useTheme, Button, IconButton, useMediaQuery, } from "@mui/material";
 import FlexBetween from "components/FlexBetween";
 import Dropzone from "react-dropzone";
 import UserImage from "components/UserImage";
@@ -46,7 +29,7 @@ const MyPostWidget = ({ picturePath }) => {
       formData.append("picturePath", image.name);
     }
 
-    const response = await fetch(`https://social-code-server.onrender.com/posts`, {
+    const response = await fetch(`http://localhost:3001/posts`, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
       body: formData,
