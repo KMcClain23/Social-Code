@@ -8,13 +8,14 @@ import helmet from "helmet";
 import morgan from "morgan";
 import path from "path";
 import { fileURLToPath } from "url";
+import { v2 as cloudinary } from 'cloudinary';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
 import postRoutes from "./routes/posts.js";
 import { register } from "./controllers/auth.js";
 import { createPost } from "./controllers/posts.js";
 import { verifyToken } from "./middleware/auth.js";
-
 
 /* CONFIGURATIONS */
 const __filename = fileURLToPath(import.meta.url);
@@ -30,16 +31,27 @@ app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
 app.use("/assets", express.static(path.join(__dirname, 'public/assets')));
 
-/* FILE STORAGE */
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, "public/assets");
-    },
-    filename: function (req, file, cb) {
-        cb(null, file.originalname);
-    }
+/* CLOUDINARY CONFIGURATION */
+cloudinary.config({
+    cloud_name: 'djvpgim4w',
+    api_key: '238442638351457',
+    api_secret: 'xqr6JiZ_3Tb5umLBSa4hIayJQ0k'
 });
-const upload = multer({ storage });
+
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: 'uploads',
+        format: async (req, file) => 'png',
+        public_id: (req, file) => {
+            const uniquePrefix = Date.now().toString();
+            const randomString = Math.random().toString(36).substring(2, 7);
+            return `${uniquePrefix}_${randomString}`;
+        },
+    },
+});
+
+const upload = multer({ storage: storage });
 
 /* ROUTES WITH FILES */
 app.post("/auth/register", upload.single("picture"), register);
