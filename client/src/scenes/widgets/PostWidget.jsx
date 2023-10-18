@@ -33,7 +33,7 @@ const PostWidget = ({
   const primary = palette.primary.main;
 
   const patchLike = async () => {
-    const response = await fetch(`http://localhost:3001/posts/${postId}/like`, {
+    const response = await fetch(`https://social-code-server.onrender.com/posts/${postId}/like`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -46,7 +46,7 @@ const PostWidget = ({
   };
 
   const editPostHandler = async (postId, newPostData) => {
-    const response = await fetch(`http://localhost:3001/posts/${postId}`, {
+    const response = await fetch(`https://social-code-server.onrender.com/posts/${postId}`, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${token}`,
