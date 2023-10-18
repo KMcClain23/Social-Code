@@ -48,6 +48,8 @@ const PostsWidget = ({ userId, isProfile = false, editPost }) => {
           description,
           location,
           picturePath,
+          clipPath,
+          audioPath,
           userPicturePath,
           likes,
           comments,
@@ -60,6 +62,8 @@ const PostsWidget = ({ userId, isProfile = false, editPost }) => {
             description={description}
             location={location}
             picturePath={picturePath}
+            clipPath={clipPath}
+            audioPath={audioPath}
             userPicturePath={userPicturePath}
             likes={likes}
             comments={comments}
