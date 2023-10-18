@@ -4,9 +4,9 @@ import User from "../models/User.js";
 /* CREATE */
 export const createPost = async (req, res) => {
   try {
-    const picturePath = req.files['picture'][0].path; // URL of the uploaded picture
-    const clipPath = req.files['clip'][0].path; // URL of the uploaded clip
-    const audioPath = req.files['audio'][0].path; // URL of the uploaded audio
+    const picturePath = req.files['picture'] ? req.files['picture'][0].path : null; // URL of the uploaded picture
+    const clipPath = req.files['clip'] ? req.files['clip'][0].path : null; // URL of the uploaded clip
+    const audioPath = req.files['audio'] ? req.files['audio'][0].path : null; // URL of the uploaded audio
     const { userId, description } = req.body;
     const user = await User.findById(userId);
     const newPost = new Post({
@@ -27,6 +27,7 @@ export const createPost = async (req, res) => {
     const post = await Post.find();
     res.status(201).json(post);
   } catch (err) {
+    console.error(err.message);
     res.status(409).json({ message: err.message });
   }
 };
