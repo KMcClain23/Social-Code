@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { EditOutlined, DeleteOutlined, AttachFileOutlined, ImageOutlined, MicOutlined, MoreHorizOutlined, } from "@mui/icons-material";
+import { EditOutlined, DeleteOutlined, AttachFileOutlined, ImageOutlined, MicOutlined, MoreHorizOutlined, GifBoxOutlined, } from "@mui/icons-material";
 import { Box, Divider, Typography, InputBase, useTheme, Button, IconButton, useMediaQuery, } from "@mui/material";
 import FlexBetween from "components/FlexBetween";
 import Dropzone from "react-dropzone";
@@ -11,8 +11,10 @@ import { setPosts } from "state";
 const MyPostWidget = ({ picturePath }) => {
   const dispatch = useDispatch();
   const [isImage, setIsImage] = useState(false);
+  const [isClip, setIsClip] = useState(false);
   const [isAudio, setIsAudio] = useState(false);
   const [image, setImage] = useState(null);
+  const [clip, setClip] = useState(null);
   const [audio, setAudio] = useState(null);
   const [post, setPost] = useState("");
   const { palette } = useTheme();
@@ -30,6 +32,10 @@ const MyPostWidget = ({ picturePath }) => {
       formData.append("picture", image);
       formData.append("picturePath", image.name);
     }
+    if (clip) {
+      formData.append("clip", clip);
+      formData.append("clipPath", clip.name);
+    }
     if (audio) {
       formData.append("audio", audio);
       formData.append("audioPath", audio.name);
@@ -43,6 +49,7 @@ const MyPostWidget = ({ picturePath }) => {
     const posts = await response.json();
     dispatch(setPosts({ posts }));
     setImage(null);
+    setClip(null);
     setAudio(null);
     setPost("");
   };
@@ -71,7 +78,7 @@ const MyPostWidget = ({ picturePath }) => {
           p="1rem"
         >
           <Dropzone
-            acceptedFiles=".jpg,.jpeg,.png,.gif"
+            acceptedFiles=".jpg,.jpeg,.png"
             multiple={false}
             onDrop={(acceptedFiles) => setImage(acceptedFiles[0])}
           >
@@ -97,6 +104,50 @@ const MyPostWidget = ({ picturePath }) => {
                 {image && (
                   <IconButton
                     onClick={() => setImage(null)}
+                    sx={{ width: "15%" }}
+                  >
+                    <DeleteOutlined />
+                  </IconButton>
+                )}
+              </FlexBetween>
+            )}
+          </Dropzone>
+        </Box>
+      )}
+      {isClip && (
+        <Box
+          border={`1px solid ${medium}`}
+          borderRadius="5px"
+          mt="1rem"
+          p="1rem"
+        >
+          <Dropzone
+            acceptedFiles=".gif"
+            multiple={false}
+            onDrop={(acceptedFiles) => setClip(acceptedFiles[0])}
+          >
+            {({ getRootProps, getInputProps }) => (
+              <FlexBetween>
+                <Box
+                  {...getRootProps()}
+                  border={`2px dashed ${palette.primary.main}`}
+                  p="1rem"
+                  width="100%"
+                  sx={{ "&:hover": { cursor: "pointer" } }}
+                >
+                  <input {...getInputProps()} />
+                  {!clip ? (
+                    <p>Add Clip Here</p>
+                  ) : (
+                    <FlexBetween>
+                      <Typography>{clip.name}</Typography>
+                      <EditOutlined />
+                    </FlexBetween>
+                  )}
+                </Box>
+                {clip && (
+                  <IconButton
+                    onClick={() => setClip(null)}
                     sx={{ width: "15%" }}
                   >
                     <DeleteOutlined />
@@ -163,6 +214,16 @@ const MyPostWidget = ({ picturePath }) => {
             sx={{ "&:hover": { cursor: "pointer", color: medium } }}
           >
             Image
+          </Typography>
+        </FlexBetween>
+
+        <FlexBetween gap="0.25rem" onClick={() => setIsClip(!isClip)}>
+          <GifBoxOutlined sx={{ color: mediumMain }} />
+          <Typography
+            color={mediumMain}
+            sx={{ "&:hover": { cursor: "pointer", color: medium } }}
+          >
+            Clip
           </Typography>
         </FlexBetween>
 

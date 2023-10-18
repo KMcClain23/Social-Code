@@ -5,6 +5,8 @@ import User from "../models/User.js";
 export const createPost = async (req, res) => {
   try {
     const picturePath = req.file.path; // URL of the uploaded image
+    const clipPath = req.file.path;
+    const audioPath = req.file.path;
     const { userId, description} = req.body;
     const user = await User.findById(userId);
     const newPost = new Post({
@@ -15,6 +17,8 @@ export const createPost = async (req, res) => {
       description,
       userPicturePath: user.picturePath,
       picturePath,
+      clipPath,
+      audioPath,
       likes: {},
       comments: [],
     });
