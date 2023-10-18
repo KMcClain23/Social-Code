@@ -17,7 +17,8 @@ const PostWidget = ({
   userPicturePath,
   likes,
   comments,
-  editPost,
+  clipPath,
+  audioPath,
 }) => {
   const [isComments, setIsComments] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -102,6 +103,21 @@ const PostWidget = ({
           style={{ borderRadius: "0.75rem", marginTop: "0.75rem" }}
           src={picturePath}
         />
+      )}
+      {clipPath && (
+        <img
+          width="100%"
+          height="auto"
+          alt="clip"
+          style={{ borderRadius: "0.75rem", marginTop: "0.75rem" }}
+          src={clipPath}
+        />
+      )}
+      {audioPath && (
+        <audio controls style={{ width: "100%", marginTop: "0.75rem" }}>
+          <source src={audioPath} type="audio/mpeg" />
+          Your browser does not support the audio element.
+        </audio>
       )}
       <FlexBetween mt="0.25rem">
         <FlexBetween gap="1rem">
