@@ -42,7 +42,6 @@ const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
         folder: 'uploads',
-        format: async (req, file) => 'png',
         public_id: (req, file) => {
             const uniquePrefix = Date.now().toString();
             const randomString = Math.random().toString(36).substring(2, 7);
@@ -50,6 +49,7 @@ const storage = new CloudinaryStorage({
         },
     },
 });
+
 
 const upload = multer({ storage: storage });
 
