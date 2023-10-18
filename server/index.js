@@ -38,12 +38,12 @@ cloudinary.config({
     api_secret: 'xqr6JiZ_3Tb5umLBSa4hIayJQ0k'
 });
 
-// Adjust the file filter for audio uploads
+// Adjust the file filter for audio, image, and document uploads
 const fileFilter = (req, file, cb) => {
-    if (file.mimetype.startsWith("audio/")) {
+    if (file.mimetype.startsWith("audio/") || file.mimetype.startsWith("image/") || file.mimetype === "application/pdf" || file.mimetype === "application/msword" || file.mimetype === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
         cb(null, true);
     } else {
-        cb(new Error("Invalid file type. Only audio files are allowed."), false);
+        cb(new Error("Invalid file type. Only audio, image, and document files are allowed."), false);
     }
 };
 
@@ -62,8 +62,8 @@ const storage = new CloudinaryStorage({
 const upload = multer({ storage: storage, fileFilter: fileFilter });
 
 /* ROUTES WITH FILES */
-app.post("/auth/register", upload.single("picture"), register);
-app.post("/posts", verifyToken, upload.single("picture"), createPost);
+app.post("/auth/register", upload.single("file"), register);
+app.post("/posts", verifyToken, upload.single("file"), createPost);
 
 /* ROUTES */
 app.use("/auth", authRoutes);
