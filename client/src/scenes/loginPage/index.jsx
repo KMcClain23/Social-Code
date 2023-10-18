@@ -27,6 +27,9 @@ const LoginPage = () => {
         <Typography fontWeight="500" variant="h5" sx={{ mb: "1.5rem" }}>
         Welcome to Social Code, where you can Connect, Collaborate, and Create with other Developers!
         </Typography>
+        <Typography fontWeight="500" variant="h5" sx={{ mb: "1.5rem", color: "red" }}>
+        Currently hosted on Netlify.  Initial login may take up to 45 seconds.
+        </Typography>
         <Form />
       </Box>
     </Box>
