@@ -38,6 +38,15 @@ cloudinary.config({
     api_secret: 'xqr6JiZ_3Tb5umLBSa4hIayJQ0k'
 });
 
+// Adjust the file filter for audio uploads
+const fileFilter = (req, file, cb) => {
+    if (file.mimetype.startsWith("audio/")) {
+        cb(null, true);
+    } else {
+        cb(new Error("Invalid file type. Only audio files are allowed."), false);
+    }
+};
+
 const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
@@ -50,8 +59,7 @@ const storage = new CloudinaryStorage({
     },
 });
 
-
-const upload = multer({ storage: storage });
+const upload = multer({ storage: storage, fileFilter: fileFilter });
 
 /* ROUTES WITH FILES */
 app.post("/auth/register", upload.single("picture"), register);
